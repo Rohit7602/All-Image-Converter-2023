@@ -76,8 +76,8 @@ class _DashboardviewState extends State<Dashboardview> {
             ),
             child: IconButton(
               onPressed: () {
-                initialState();
-                // AppServices.shareMyApp();
+                print("pressed ********* ");
+                AppServices.shareMyApp();
               },
               icon: Image.asset("assets/share.png"),
             ),

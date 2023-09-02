@@ -4,6 +4,7 @@ import 'package:all_in_one_image_converter/app_config.dart';
 import 'package:all_in_one_image_converter/helpers/colors.dart';
 import 'package:all_in_one_image_converter/helpers/getter_setter.dart';
 import 'package:all_in_one_image_converter/main.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:image/image.dart' as ig;
@@ -92,153 +93,187 @@ class _ImageConverterViewState extends State<ImageConverterView> {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          padding: const EdgeInsets.all(15),
-          decoration: BoxDecoration(gradient: AppColors.applightGradientColor),
-          child: Column(
-            children: [
-              AppServices.addHeight(10),
-              Text(
-                "Upload Image to Convert",
-                style: GoogleFonts.nunito()
-                    .copyWith(fontSize: 20, fontWeight: FontWeight.w700),
-              ),
-              AppServices.addHeight(15),
-              Align(
-                alignment: Alignment.topCenter,
-                child: pickedFile != null
-                    ? Column(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.all(10),
-                            height: 240,
-                            width: MediaQuery.of(context).size.width - 30,
-                            decoration: BoxDecoration(
-                                color: AppColors.whiteColor.withOpacity(0.3),
-                                border: Border.all(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.all(15),
+              decoration:
+                  BoxDecoration(gradient: AppColors.applightGradientColor),
+              child: Column(
+                children: [
+                  AppServices.addHeight(10),
+                  Text(
+                    "Upload Image to Convert",
+                    style: GoogleFonts.nunito()
+                        .copyWith(fontSize: 20, fontWeight: FontWeight.w700),
+                  ),
+                  AppServices.addHeight(15),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: pickedFile != null
+                        ? Column(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.all(10),
+                                height: 240,
+                                width: MediaQuery.of(context).size.width - 30,
+                                decoration: BoxDecoration(
                                     color:
-                                        AppColors.greyColor.withOpacity(0.2)),
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Image.file(
-                              File(pickedFile!.path),
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                          TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  pickedFile = null;
-                                });
-                              },
-                              child: const Text("Change Image"))
-                        ],
-                      )
-                    : InkWell(
-                        onTap: () => pickImageFromGallery(),
-                        child: DottedBorder(
-                          strokeCap: StrokeCap.round,
-                          borderType: BorderType.RRect,
-                          dashPattern: const [2, 5],
-                          radius: const Radius.circular(10),
-                          child: Container(
-                            alignment: Alignment.center,
-                            height: 170,
-                            width: MediaQuery.of(context).size.width - 80,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Select Image",
-                                  style: GoogleFonts.nunito().copyWith(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700),
+                                        AppColors.whiteColor.withOpacity(0.3),
+                                    border: Border.all(
+                                        color: AppColors.greyColor
+                                            .withOpacity(0.2)),
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: Image.file(
+                                  File(pickedFile!.path),
+                                  fit: BoxFit.contain,
                                 ),
-                                Image.asset(
-                                  "assets/picture.png",
-                                  width: 90,
+                              ),
+                              TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      pickedFile = null;
+                                    });
+                                  },
+                                  child: const Text("Change Image"))
+                            ],
+                          )
+                        : InkWell(
+                            onTap: () => pickImageFromGallery(),
+                            child: DottedBorder(
+                              strokeCap: StrokeCap.round,
+                              borderType: BorderType.RRect,
+                              dashPattern: const [2, 5],
+                              radius: const Radius.circular(10),
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: 170,
+                                width: MediaQuery.of(context).size.width - 80,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              pickedFile != null
-                  ? Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.greyColor.withOpacity(0.5),
-                              offset: const Offset(1, 3),
-                              blurRadius: 6,
-                            )
-                          ],
-                          gradient: AppColors.buttonGradientColor,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(25))),
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              shadowColor: Colors.transparent,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(25))),
-                              backgroundColor: Colors.transparent),
-                          onPressed: () {
-                            getImage();
-                          },
-                          child: isLoading
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: Center(
-                                    child: CircularProgressIndicator.adaptive(
-                                      backgroundColor: AppColors.whiteColor,
-                                    ),
-                                  ),
-                                )
-                              : Row(
+                                child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                              color: AppColors.whiteColor),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                                color: AppColors.greyColor,
-                                                blurRadius: 4)
-                                          ]),
-                                      child: Image.asset(
-                                        "assets/download.png",
-                                        width: 30,
-                                      ),
-                                    ),
-                                    AppServices.addWidth(10),
                                     Text(
-                                      "Download Image",
+                                      "Select Image",
                                       style: GoogleFonts.nunito().copyWith(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.whiteColor),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                    Image.asset(
+                                      "assets/picture.png",
+                                      width: 90,
                                     ),
                                   ],
-                                )),
-                    )
-                  : const SizedBox(),
-            ],
+                                ),
+                              ),
+                            ),
+                          ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  pickedFile != null
+                      ? InkWell(
+                          onTap: () {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            Future.delayed(
+                                const Duration(
+                                  milliseconds: 300,
+                                ), () async {
+                              await getImage();
+                            });
+                          },
+                          child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color:
+                                          AppColors.greyColor.withOpacity(0.5),
+                                      offset: const Offset(1, 3),
+                                      blurRadius: 6,
+                                    )
+                                  ],
+                                  gradient: AppColors.buttonGradientColor,
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(25))),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: AppColors.whiteColor),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                              color: AppColors.greyColor,
+                                              blurRadius: 4)
+                                        ]),
+                                    child: Image.asset(
+                                      "assets/download.png",
+                                      width: 30,
+                                    ),
+                                  ),
+                                  AppServices.addWidth(10),
+                                  Text(
+                                    "Download Image",
+                                    style: GoogleFonts.nunito().copyWith(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.whiteColor),
+                                  ),
+                                ],
+                              )),
+                        )
+                      : const SizedBox(),
+                ],
+              ),
+            ),
           ),
-        ),
+          isLoading
+              ? Container(
+                  alignment: Alignment.center,
+                  height: AppServices.getScreenHeight(context),
+                  width: AppServices.getScreenWidth(context),
+                  color: AppColors.blackColor.withOpacity(0.7),
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 90,
+                    width: 90,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: AppColors.whiteColor),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                            height: 15,
+                            width: 15,
+                            child: CircularProgressIndicator.adaptive()),
+                        AppServices.addHeight(10),
+                        const Text(
+                          "Don't Go Back",
+                          style: TextStyle(
+                              color: AppColors.greyColor,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 10),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : const SizedBox()
+        ],
       ),
       bottomNavigationBar: isAdshow
           ? SizedBox(
@@ -271,6 +306,7 @@ class _ImageConverterViewState extends State<ImageConverterView> {
       print("numChannels: ${img.numChannels}");
 
       ig.Image img2;
+
       if (img.numChannels == 4) {
         // The image has an alpha channel
         img2 = ig.Image(
